@@ -89,9 +89,9 @@ public class Cat {
 	* ID accessor
 	*/
 	
-	public String getID() {
+	public int getId() {
 		
-		return "" + id;
+		return id;
 		
 	}
 	
@@ -161,7 +161,7 @@ public class Cat {
 
 	public String toString() {
 		
-		return "ID " + getID() + ". " + getName() + ": " + getRate();
+		return "ID " + getId() + ". " + getName() + ": " + getRate();
 		
 	}
 	

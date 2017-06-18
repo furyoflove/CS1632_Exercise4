@@ -47,10 +47,14 @@ public class RentACat {
 			String input = keyboard.nextLine();
 			
 			if(input.equals("1")) {
-				listCats();
+				System.out.println(listCats());
 			}
 			else if(input.equals("2")) {
 				
+				while(tryCatRental()) {
+					// keep looping
+				}
+
 			}
 			else if(input.equals("3")) {
 				
@@ -62,7 +66,8 @@ public class RentACat {
 				System.out.println("Please enter a valid option! ");
 				mainMenu();
 			}
-			return false; // fall through error -- so break out
+
+			return true;
 
 		} 
 		catch(Exception ex) { // generic error handling
@@ -74,22 +79,157 @@ public class RentACat {
 		
 	} // End of main menu display
 	
+	/**
+	* Show the list of cats available for rent
+	*/
 
-	public static void listCats() {
+	public static String listCats() {
+
+		String list = "";
 
 		for(Cat cat: cats) {
 
 			if(cat.isAvailable()) {
-				System.out.println(cat.toString());
+				list += cat.toString() + "\n";
 			}
+
+		}
+		return list.substring(0, list.lastIndexOf("\n")); // remove the trailing newline
+
+	} // End of printing rentable cats
+
+	/**
+	* Try and rent a cat
+	* First enter a customer id
+	* Then enter the desired cat id (to rent it)
+	*/
+
+	public static boolean tryCatRental() {
+
+		try {
+
+			// find the user inputted customer id
+			int id = getCustomerId();
+			if(id == -1) { // escape phrase entered -- return to main menu
+				return false;
+			}
+
+			// find the user inputted cat to rent(if available)
+			int catId = getCatRental(customers.get(id).getName());
+			if(id == -1) { // escape phrase entered -- return to main menu
+				return false;
+			}
+
+			return false; // cat rental is succesful, so return to break input loop
+
+		}
+		catch(Exception ex) { // general exception handling -- break input loop
+
+			return false;
 
 		}
 
 	}
 
 	/**
+	* Helper method for -- option #2 tryCatRental()
+	*
+	* Validates user input if it is an existing customer id
+	*/
+
+	public static int getCustomerId() {
+
+		try {
+
+			System.out.print("Customer ID > ");
+			String input = keyboard.nextLine();
+
+			if(input.equalsIgnoreCase("quit")) { // escape phrase -- returns to main menu
+				return -1;
+			}
+
+			int id = Integer.parseInt(input);
+			
+			for(Customer customer: customers) {
+
+					if(customer.getId() == id) { // id was found
+						return id;
+					}
+
+			}
+			// Bad input so try again
+			System.out.println("That customer doesn't exist! ");
+			getCustomerId();
+
+		}
+		catch(NumberFormatException nfe) { // input was not an integer
+
+			System.out.println("That customer doesn't exist! ");
+			getCustomerId();
+
+		}
+
+		return -1; // fall through error
+
+	} // End of customer id validation
+
+
+	/**
+	* Helper method for -- option #2 tryCatRental()
+	*
+	* Validates user input if it is an existing cat id
+	* and if cat is available to be rented
+	*/
+
+	public static int getCatRental(String rentorName) {
+
+		try {
+
+			System.out.print("Rent which cat? > ");
+			String input = keyboard.nextLine();
+
+			if(input.equalsIgnoreCase("quit")) { // escape phrase -- returns to main menu
+				return -1;
+			}
+
+			int id = Integer.parseInt(input);
+
+			for(Cat cat: cats) {
+
+				if(cat.getId() == id) {
+					if(cat.isAvailable()) { // successful rent
+						cat.rentCat(rentorName);
+						System.out.println(cat.getName() + " has been rented to Customer " + rentorName);
+						return 0;
+					}
+					else { // cat is already rented out
+						System.out.println(cat.getName() + " is not here! ");
+						getCatRental(rentorName);
+					}
+				}
+
+			}
+			// Bad input so try again
+			System.out.println("Invalid cat ID. ");
+			getCatRental(rentorName);
+
+		}
+		catch(NumberFormatException nfe) { // input was not an integer
+
+			System.out.println("Invalid cat ID. ");
+			getCatRental(rentorName);
+
+		}
+
+		return -1; // fall through error
+
+	} // End of cat id validation
+
+
+	/**
 	* Dynamically generate Cats and Customers
 	*/
+
 	public static boolean initialize() {
 
 		try {
