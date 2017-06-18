@@ -44,6 +44,7 @@ public class Cat {
 	/**
 	* Try and rent a cat
 	* returns true on success, false if cat is already rented
+	* @param rentor - name of the customer renting the cat
 	*/
 	
 	public boolean rentCat(String rentor) {

@@ -58,8 +58,12 @@ public class RentACat {
 			}
 			else if(input.equals("3")) {
 				
+				while(tryCatReturn()) {
+					// keep looping
+				}
+
 			}
-			else if(input.equals("4")) { // quit program
+			else if(input.equals("4")) { // Option #4 -- quit program
 				return false;
 			}
 			else { // bad input
@@ -80,6 +84,8 @@ public class RentACat {
 	} // End of main menu display
 	
 	/**
+	* Option #1
+	*
 	* Show the list of cats available for rent
 	*/
 
@@ -99,35 +105,43 @@ public class RentACat {
 	} // End of printing rentable cats
 
 	/**
+	* Option #2
+	*
 	* Try and rent a cat
+	*
 	* First enter a customer id
 	* Then enter the desired cat id (to rent it)
 	*/
 
 	public static boolean tryCatRental() {
 
-		try {
-
-			// find the user inputted customer id
-			int id = getCustomerId();
-			if(id == -1) { // escape phrase entered -- return to main menu
-				return false;
-			}
-
-			// find the user inputted cat to rent(if available)
-			int catId = getCatRental(customers.get(id).getName());
-			if(id == -1) { // escape phrase entered -- return to main menu
-				return false;
-			}
-
-			return false; // cat rental is succesful, so return to break input loop
-
-		}
-		catch(Exception ex) { // general exception handling -- break input loop
-
+		// find the user inputted customer id
+		int id = getCustomerId();
+		if(id == -1) { // escape phrase entered -- return to main menu
 			return false;
-
 		}
+		if(id == 0) {
+			while(id == 0) {
+				id = getCustomerId();
+			}
+		}
+		
+		/*
+		* find the user inputted cat to rent(if available)
+		* uses the customer id to find their name 
+		* (which is then passed as a parameter in the cat rental)
+		*/
+		int catId = getCatRental(customers.get(id).getName());
+		if(catId == -1) { // escape phrase entered -- return to main menu
+			return false;
+		}
+		if(catId == 0) { // invalid cat id or cat is already rented
+			while(catId == 0) {
+				catId = getCatRental(customers.get(id).getName());
+			}
+		}
+
+		return false; // cat rental is succesful, so return to break input loop
 
 	}
 
@@ -159,17 +173,21 @@ public class RentACat {
 			}
 			// Bad input so try again
 			System.out.println("That customer doesn't exist! ");
-			getCustomerId();
+			return 0;
 
 		}
 		catch(NumberFormatException nfe) { // input was not an integer
 
 			System.out.println("That customer doesn't exist! ");
-			getCustomerId();
+			return 0;
 
 		}
+		catch(Exception ex) { // generic error handling
 
-		return -1; // fall through error
+			ex.printStackTrace();
+			return -1;
+
+		}
 
 	} // End of customer id validation
 
@@ -179,6 +197,7 @@ public class RentACat {
 	*
 	* Validates user input if it is an existing cat id
 	* and if cat is available to be rented
+	* @param rentorName - name of the customer renting the cat
 	*/
 
 	public static int getCatRental(String rentorName) {
@@ -200,31 +219,114 @@ public class RentACat {
 					if(cat.isAvailable()) { // successful rent
 						cat.rentCat(rentorName);
 						System.out.println(cat.getName() + " has been rented to Customer " + rentorName);
-						return 0;
+						return 1;
 					}
 					else { // cat is already rented out
 						System.out.println(cat.getName() + " is not here! ");
-						getCatRental(rentorName);
+						return 0;
 					}
 				}
 
 			}
 			// Bad input so try again
 			System.out.println("Invalid cat ID. ");
-			getCatRental(rentorName);
+			return 0;
 
 		}
 		catch(NumberFormatException nfe) { // input was not an integer
 
 			System.out.println("Invalid cat ID. ");
-			getCatRental(rentorName);
+			return 0;
+
+		}
+		catch(Exception ex) { // generic error handling
+
+			ex.printStackTrace();
+			return -1;
 
 		}
 
-		return -1; // fall through error
-
 	} // End of cat id validation
 
+	/**
+	* Option #3
+	*
+	* Try and return a cat
+	*
+	* Enter the cat id and returns true if cat is rented
+	*/
+
+	public static boolean tryCatReturn() {
+
+		int catReturn = getCatReturn();
+		if(catReturn == - 1) { // escape phrase has been entered
+			return false;
+		}
+		if(catReturn == 0) {
+			while(catReturn == 0) {
+				catReturn = getCatReturn();
+			}
+		}
+		return false; // successful cat return
+
+	} // End of cat return
+
+	/**
+	* Helper method for -- option #3 tryCatReturn()
+	*
+	* Validates user input if it is an existing cat id
+	* and if cat is available to be returned
+	*/
+
+	public static int getCatReturn() {
+
+		try {
+
+			System.out.print("Return which cat? > ");
+			String input = keyboard.nextLine();
+
+			if(input.equalsIgnoreCase("quit")) { // escape phrase -- returns to main menu
+				return -1;
+			}
+
+			int id = Integer.parseInt(input);
+
+			for(Cat cat: cats) {
+
+				if(cat.getId() == id) {
+					if(!cat.isAvailable()) { // cat is succesfully returned
+						System.out.println(cat.isRentedBy() + " paid " + 
+							cat.getRate().substring(0, cat.getRate().lastIndexOf(" / day")) + 
+							"\nWelcome Back " + cat.getName());
+						cat.returnCat();
+						return 1;
+					}
+					else { // cat is not rented out, so it cannot be returned
+						System.out.println("Error, " + cat.getName() + " has not been rented. ");
+						return 0;
+					}
+				}
+
+			}
+			// Bad input so try again
+			System.out.println("Invalid cat ID. ");
+			return 0;
+
+		}
+		catch(NumberFormatException nfe) { // input was not an integer
+
+			System.out.println("Invalid cat ID. ");
+			return 0;
+
+		}
+		catch(Exception ex) { // generic error handling
+
+			ex.printStackTrace();
+			return -1;
+
+		}
+
+	} // End of cat return validation
 
 	/**
 	* Dynamically generate Cats and Customers
@@ -239,24 +341,24 @@ public class RentACat {
 
 			// top 10 most common cat names in the US
 			String[] possibleCatNames = 
-			{
-				"Bella", "Max", "Chloe", "Oliver", "Lucy",
-				"Charlie", "Lily", "Sophie", "Tiger", "Shadow"
-			};
+				{
+					"Bella", "Max", "Chloe", "Oliver", "Lucy",
+					"Charlie", "Lily", "Sophie", "Tiger", "Shadow"
+				};
 
 			// top 10 most common first names in the US
 			String[] possibleFirstNames = 
-			{
-				"James", "John", "Robert", "Michael", "William",
-				"Mary", "Patricia", "Linda", "Barbara", "Elizabeth"
-			};
+				{
+					"James", "John", "Robert", "Michael", "William",
+					"Mary", "Patricia", "Linda", "Barbara", "Elizabeth"
+				};
 
 			// top 10 most common last names in the US
 			String[] possibleLastNames = 
-			{
-				"Smith", "Johnson", "Williams", "Brown", "Jones",
-				"Miller", "Davis", "Garcia", "Rodriguez", "Wilson"
-			};
+				{
+					"Smith", "Johnson", "Williams", "Brown", "Jones",
+					"Miller", "Davis", "Garcia", "Rodriguez", "Wilson"
+				};
 
 			Random random = new Random();
 
