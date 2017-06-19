@@ -68,10 +68,9 @@ public class RentACat {
 			}
 			else { // bad input
 				System.out.println("Please enter a valid option! ");
-				return true;
 			}
 
-			return false; // fall through error
+			return true;
 
 		} 
 		catch(Exception ex) { // generic error handling
