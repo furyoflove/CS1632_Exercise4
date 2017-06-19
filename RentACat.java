@@ -7,7 +7,10 @@ public class RentACat {
 	* Globals
 	*/
 
-	private static Scanner keyboard;
+	// handles user input
+	private static Scanner keyboard; 
+	
+	// holds cats/customer lists to be viewed and editted
 	private static ArrayList<Cat> cats;
 	private static ArrayList<Customer> customers;
 	
@@ -22,10 +25,7 @@ public class RentACat {
 			return;
 		}
 
-
-		while(mainMenu()) {
-			// keep looping
-		}
+		while(mainMenu()) { /* keep looping until user wants to quit*/ }
 		
 		// Program exit
 		keyboard.close();
@@ -46,22 +46,14 @@ public class RentACat {
 			keyboard = new Scanner(System.in);
 			String input = keyboard.nextLine();
 			
-			if(input.equals("1")) {
+			if(input.equals("1")) { // Option #1 -- Print available cats
 				System.out.println(listCats());
 			}
-			else if(input.equals("2")) {
-				
-				while(tryCatRental()) {
-					// keep looping
-				}
-
+			else if(input.equals("2")) { // Option #2 --  Rent cat
+				while(tryCatRental()) { /* keep looping */ }
 			}
-			else if(input.equals("3")) {
-				
-				while(tryCatReturn()) {
-					// keep looping
-				}
-
+			else if(input.equals("3")) { // Option #3 --  Return cat
+				while(tryCatReturn()) { /* keep looping */ }
 			}
 			else if(input.equals("4")) { // Option #4 -- quit program
 				return false;
@@ -99,6 +91,7 @@ public class RentACat {
 			}
 
 		}
+
 		return list.substring(0, list.lastIndexOf("\n")); // remove the trailing newline
 
 	} // End of printing rentable cats
@@ -119,8 +112,8 @@ public class RentACat {
 		if(id == -1) { // escape phrase was entered
 			return false;
 		}
-		if(id == 0) {
-			while(id == 0) {
+		if(id == 0) { // bad input
+			while(id == 0) { // loop until quit or valid customer id is entered
 				id = getCustomerId();
 			}
 		}
@@ -134,7 +127,7 @@ public class RentACat {
 			return false;
 		}
 		if(catId == 0) { // invalid cat id or cat is already rented
-			while(catId == 0) {
+			while(catId == 0) { // loop until quit or successful cat rental
 				catId = getCatRental(customers.get(id).getName());
 			}
 		}
@@ -153,6 +146,10 @@ public class RentACat {
 
 		try {
 
+
+			/*
+			* Prompt and grab user input for Customer ID
+			*/
 			System.out.print("Customer ID > ");
 			String input = keyboard.nextLine();
 
@@ -169,6 +166,7 @@ public class RentACat {
 					}
 
 			}
+
 			// Bad input so try again
 			System.out.println("That customer doesn't exist! ");
 			return 0;
@@ -202,6 +200,9 @@ public class RentACat {
 
 		try {
 
+			/*
+			* Prompt and grab user input for Cat ID
+			*/
 			System.out.print("Rent which cat? > ");
 			String input = keyboard.nextLine();
 
@@ -213,7 +214,7 @@ public class RentACat {
 
 			for(Cat cat: cats) {
 
-				if(cat.getId() == id) {
+				if(cat.getId() == id) { // cat is found
 					if(cat.isAvailable()) { // successful rent
 						cat.rentCat(rentorName);
 						System.out.println(cat.getName() + " has been rented to Customer " + rentorName);
@@ -226,6 +227,7 @@ public class RentACat {
 				}
 
 			}
+
 			// Bad input so try again
 			System.out.println("Invalid cat ID. ");
 			return 0;
@@ -260,11 +262,12 @@ public class RentACat {
 		if(catReturn == - 1) { // escape phrase has been entered
 			return false;
 		}
-		if(catReturn == 0) {
-			while(catReturn == 0) {
+		if(catReturn == 0) { // bad input
+			while(catReturn == 0) { // loop until user quits or successful return
 				catReturn = getCatReturn();
 			}
 		}
+
 		return false; // successful cat return
 
 	} // End of cat return
@@ -291,7 +294,7 @@ public class RentACat {
 
 			for(Cat cat: cats) {
 
-				if(cat.getId() == id) {
+				if(cat.getId() == id) { // cat is found
 					if(!cat.isAvailable()) { // cat is succesfully returned
 						System.out.println(cat.isRentedBy() + " paid " + 
 							cat.getRate().substring(0, cat.getRate().lastIndexOf(" / day")) + 
@@ -306,6 +309,7 @@ public class RentACat {
 				}
 
 			}
+
 			// Bad input so try again
 			System.out.println("Invalid cat ID. ");
 			return 0;
@@ -367,6 +371,10 @@ public class RentACat {
 			// dynamically generate how many cats and customers will be in the system
 			int numOfCats = random.nextInt(high - low) + low,
 				numOfCustomers = random.nextInt(high - low) + low;
+
+			/*
+			* THE THREE ARRAY INSTANTIATIONS BELOW CAN ONLY BE DONE IN JAVA 8!
+			*/
 
 			// dynamically generate indices to help pick cat and customer names
 			int[] catNames = random.ints(1, 11).distinct().limit(numOfCats).toArray(),

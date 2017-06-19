@@ -91,7 +91,7 @@ public class Customer {
 
 		System.out.println("New name and Id: " + customer.toString());
 
-	}
+	} // End of main
 
 
 } // End of Customer last

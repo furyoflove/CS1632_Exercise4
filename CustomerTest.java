@@ -63,5 +63,6 @@ public class CustomerTest {
 		assertEquals(expectedToString, customer.toString());
 
 	}
+	
 
 } // End of Customer test class

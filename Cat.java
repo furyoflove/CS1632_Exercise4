@@ -54,7 +54,9 @@ public class Cat {
 			isRentedTo = rentor;
 			return true;
 		}
-		return false;
+		else {
+			return false;
+		}
 		
 	}
 	
@@ -107,7 +109,7 @@ public class Cat {
 	}
 	
 	/**
-	* return true if the cat is not available
+	* return true if the cat is available (not rented)
 	*/
 
 	public boolean isAvailable() {
@@ -183,7 +185,8 @@ public class Cat {
 		cat.setRate(250.00);
 
 		System.out.println(cat.toString());
-	}
+
+	} // End of main
 
 
 } // End of Cat class

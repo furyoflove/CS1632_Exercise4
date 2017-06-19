@@ -28,7 +28,7 @@ public class CatTest {
 
 	}	
 
-	// Asserts that chaning the Cat name
+	// Asserts that changing the Cat name
 	// works as compared to an expected value
 	@Test
 	public void testCatNameChange() {
@@ -40,7 +40,7 @@ public class CatTest {
 
 	}	
 
-	// Asserts that chaning the Cat ID
+	// Asserts that changing the Cat ID
 	// works as compared to an expected value
 	@Test
 	public void testCatIdChange() {
@@ -52,7 +52,7 @@ public class CatTest {
 
 	}
 
-	// Asserts that chaning the Cat rental rate
+	// Asserts that changing the Cat rental rate
 	// works as compared to an expected value
 	@Test
 	public void testCatRateChange() {
