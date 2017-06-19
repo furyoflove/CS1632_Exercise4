@@ -146,7 +146,6 @@ public class RentACat {
 
 		try {
 
-
 			/*
 			* Prompt and grab user input for Customer ID
 			*/
