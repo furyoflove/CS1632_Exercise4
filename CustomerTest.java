@@ -27,7 +27,7 @@ public class CustomerTest {
 
 	}
 
-	// Asserts that chaning the Customer name
+	// Asserts that changing the Customer name
 	// works as compared to an expected value
 	@Test
 	public void testCustomerNameChange() {
@@ -41,7 +41,7 @@ public class CustomerTest {
 	}
 
 
-	// Asserts that chaning the Customer ID
+	// Asserts that changing the Customer ID
 	// works as compared to an expected value
 	@Test
 	public void testCustomerIdChange() {
@@ -63,6 +63,6 @@ public class CustomerTest {
 		assertEquals(expectedToString, customer.toString());
 
 	}
-	
+
 
 } // End of Customer test class
