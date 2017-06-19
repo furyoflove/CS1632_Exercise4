@@ -68,10 +68,10 @@ public class RentACat {
 			}
 			else { // bad input
 				System.out.println("Please enter a valid option! ");
-				mainMenu();
+				return true;
 			}
 
-			return true;
+			return false; // fall through error
 
 		} 
 		catch(Exception ex) { // generic error handling
@@ -117,7 +117,7 @@ public class RentACat {
 
 		// find the user inputted customer id
 		int id = getCustomerId();
-		if(id == -1) { // escape phrase entered -- return to main menu
+		if(id == -1) { // escape phrase was entered
 			return false;
 		}
 		if(id == 0) {
@@ -127,12 +127,11 @@ public class RentACat {
 		}
 		
 		/*
-		* find the user inputted cat to rent(if available)
+		* find the user inputted cat to rent (if available)
 		* uses the customer id to find their name 
-		* (which is then passed as a parameter in the cat rental)
 		*/
 		int catId = getCatRental(customers.get(id).getName());
-		if(catId == -1) { // escape phrase entered -- return to main menu
+		if(catId == -1) { // escape phrase was entered
 			return false;
 		}
 		if(catId == 0) { // invalid cat id or cat is already rented
